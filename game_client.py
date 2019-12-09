@@ -5,7 +5,7 @@ import json
 def game_request():
     client_socket.sendto(str(1).encode(), (host, port))
     client_socket.sendto(name.encode(), (host, port))
-    print("Aguardando um adversário a sua altura...")
+    print("Aguardando um adversário a sua altura...\n\n\n")
     opponent, address = client_socket.recvfrom(1024)
     opponent = opponent.decode()
     player, address = client_socket.recvfrom(1024)
@@ -28,16 +28,17 @@ def game_request():
                 playC = int(input())
                 if tabuleiro[playL][playC] == "":
                     tabuleiro[playL][playC] = player
-                    show_board(tabuleiro)
+                    show_board(tabuleiro, opponent, player)
                     jogada = True
                     client_socket.sendto(json.dumps(tabuleiro).encode(), (host, 8001))
                 else:
                     print("O local escolhido é inválido!!")
                     print("Tente Novamente\n")
-                    show_board(tabuleiro)
+                    show_board(tabuleiro, opponent, player)
         elif vez == 7:
             msg, address = client_socket.recvfrom(1024)
             print(msg.decode())
+            input()
             break
 
 
@@ -71,7 +72,7 @@ def instructions():
           "   Aquele que estiver esperando mais tempo na fila\n"
           "   será o Player 1(X) e o outro o Player 2(O).")
     print("2- As jogadas ocorrem de forma alternada, e em cada\n"
-          "jogada deverá ser informado a linha e a coluna desejada.")
+          "   jogada deverá ser informado a linha e a coluna desejada.")
     print("3- Aquele que vencer ganhará pontos no ranking.")
     print("4- Caso empate nenhum jogador ganhará o ponto.")
     input()
@@ -127,3 +128,7 @@ while True:
         instructions()
     elif op == 3:
         ranking()
+    elif op == 4:
+        break
+    else:
+        pass
